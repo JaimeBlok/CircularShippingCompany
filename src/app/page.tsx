@@ -16,8 +16,6 @@ export default function Home() {
   
   // State for customer type selection
   const [customerType, setCustomerType] = useState<'particulier' | 'zakelijk'>('particulier');
-  const particulierRef = useRef<HTMLButtonElement>(null);
-  const zakelijkRef = useRef<HTMLButtonElement>(null);
   
   // State for language selection
   const [language, setLanguage] = useState<'en' | 'nl'>('en');
@@ -76,7 +74,7 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
+    
     // Smooth scroll with proper clamping
     let scrollTimeout: NodeJS.Timeout;
     let currentScroll = 0;
@@ -436,10 +434,8 @@ export default function Home() {
                 onClick={() => setCustomerType('zakelijk')}
                 className={`hover:opacity-70 transition-opacity ${
                   customerType === 'zakelijk' 
-                    ? 'font-bold' 
-                    : customerType === 'zakelijk' 
-                      ? 'text-white' 
-                      : 'text-black'
+                    ? 'font-bold text-white' 
+                    : 'text-black'
                 }`}
                 style={{
                   color: customerType === 'zakelijk' ? 'var(--color-accent-green)' : undefined
@@ -566,10 +562,8 @@ export default function Home() {
                   }}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
                     customerType === 'zakelijk' 
-                      ? 'font-bold' 
-                      : customerType === 'zakelijk' 
-                        ? 'text-white hover:bg-gray-700' 
-                        : 'text-black hover:bg-gray-100'
+                      ? 'font-bold text-white hover:bg-gray-700' 
+                      : 'text-black hover:bg-gray-100'
                   }`}
                   style={{
                     color: customerType === 'zakelijk' ? 'var(--color-accent-green)' : undefined
