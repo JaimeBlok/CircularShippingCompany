@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function VoorwaardenPage() {
   return (
@@ -18,12 +19,12 @@ export default function VoorwaardenPage() {
               />
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-black hover:opacity-70 transition-opacity">
+              <Link href="/" className="text-black hover:opacity-70 transition-opacity">
                 Home
-              </a>
-              <a href="/#contact" className="text-black hover:opacity-70 transition-opacity">
+              </Link>
+              <Link href="/#contact" className="text-black hover:opacity-70 transition-opacity">
                 Contact
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -52,8 +53,8 @@ export default function VoorwaardenPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">1. Definities</h3>
                   <p className="leading-relaxed">
-                    In deze voorwaarden wordt verstaan onder "Circular Shipping Company" of "wij": Circular Shipping Company B.V., 
-                    gevestigd in Nederland. "Klant" of "u" betekent de natuurlijke of rechtspersoon die gebruik maakt van onze diensten.
+                    In deze voorwaarden wordt verstaan onder &ldquo;Circular Shipping Company&rdquo; of &ldquo;wij&rdquo;: Circular Shipping Company B.V., 
+                    gevestigd in Nederland. &ldquo;Klant&rdquo; of &ldquo;u&rdquo; betekent de natuurlijke of rechtspersoon die gebruik maakt van onze diensten.
                   </p>
                 </div>
 

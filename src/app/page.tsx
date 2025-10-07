@@ -16,8 +16,6 @@ export default function Home() {
   
   // State for customer type selection
   const [customerType, setCustomerType] = useState<'particulier' | 'zakelijk'>('particulier');
-  const [pilPosition, setPilPosition] = useState(0);
-  const [pilWidth, setPilWidth] = useState(0);
   const particulierRef = useRef<HTMLButtonElement>(null);
   const zakelijkRef = useRef<HTMLButtonElement>(null);
   
@@ -31,24 +29,6 @@ export default function Home() {
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // State for testimonials carousel
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const totalTestimonials = 14;
-
-  // Testimonials navigation functions
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => {
-      const next = prev + 1;
-      return next >= totalTestimonials ? 0 : next;
-    });
-  };
-
-  const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => {
-      const prevIndex = prev - 1;
-      return prevIndex < 0 ? totalTestimonials - 1 : prevIndex;
-    });
-  };
 
   // FAQ toggle function with GSAP animation
   const toggleFAQ = (index: number) => {
