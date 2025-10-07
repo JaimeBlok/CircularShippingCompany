@@ -73,38 +73,6 @@ export default function Home() {
   
   
 
-  // Update pil position and width when customer type changes
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const updatePilPosition = () => {
-      if (customerType === 'particulier' && particulierRef.current) {
-        const rect = particulierRef.current.getBoundingClientRect();
-        const containerRect = particulierRef.current.parentElement?.getBoundingClientRect();
-        if (containerRect) {
-          setPilPosition(rect.left - containerRect.left);
-          setPilWidth(rect.width);
-        }
-      } else if (customerType === 'zakelijk' && zakelijkRef.current) {
-        const rect = zakelijkRef.current.getBoundingClientRect();
-        const containerRect = zakelijkRef.current.parentElement?.getBoundingClientRect();
-        if (containerRect) {
-          setPilPosition(rect.left - containerRect.left);
-          setPilWidth(rect.width);
-        }
-      }
-    };
-
-    // Initial calculation
-    updatePilPosition();
-    
-    // Recalculate on window resize
-    window.addEventListener('resize', updatePilPosition);
-    
-    return () => {
-      window.removeEventListener('resize', updatePilPosition);
-    };
-  }, [customerType]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
