@@ -3,13 +3,30 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Circular Shipping Company Brand Colors */
+  --color-primary-dark: #2D3047;
+  --color-light-gray: #CCCCCC;
+  --color-black: #000000;
+  --color-accent-green: #09BC8A;
+  --color-accent-green-dark: #068864;
+  
+  /* Typography */
+  --font-sf-pro: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace;
+  
+  /* Brand Colors for Tailwind */
+  --color-primary-dark: #2D3047;
+  --color-light-gray: #CCCCCC;
+  --color-black: #000000;
+  --color-accent-green: #09BC8A;
+  --color-accent-green-dark: #068864;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +39,21 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Infinity carousel animation */
+@keyframes infiniteScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Custom focus ring with logo color */
+.focus-ring-logo:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green);
 }
