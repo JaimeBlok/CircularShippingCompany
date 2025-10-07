@@ -606,7 +606,7 @@ export default function Home() {
           
           {/* Main Headline */}
             <h1 className={`hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : ''
+                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`} style={{
                   color: customerType === 'zakelijk' ? 'white' : 'var(--color-primary-dark)'
                 }}>
