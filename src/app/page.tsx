@@ -182,7 +182,7 @@ export default function Home() {
 
   return (
     <div className={`font-sans transition-colors duration-300 ${
-      customerType === 'zakelijk' 
+      (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
         ? 'bg-gray-900 text-white' 
         : 'bg-white text-black'
     }`}>
@@ -338,7 +338,7 @@ export default function Home() {
       `}</style>
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b transition-colors duration-300 ${
-        customerType === 'zakelijk'
+        (customerType as 'particulier' | 'zakelijk') === 'zakelijk'
           ? 'bg-gray-900/80 border-gray-700'
           : 'bg-white/80 border-gray-100'
       }`}>
@@ -351,7 +351,7 @@ export default function Home() {
                 width={200}
                 height={80}
                 className={`h-10 sm:h-12 w-auto transition-all duration-300 ${
-                  customerType === 'zakelijk' ? 'brightness-0 invert' : ''
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness-0 invert' : ''
                 }`}
           priority
         />
@@ -371,7 +371,7 @@ export default function Home() {
                   }
                 }}
                 className={`hover:opacity-70 transition-opacity ${
-                customerType === 'zakelijk' ? 'text-white' : 'text-black'
+                (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
               >
                 Ons verhaal
@@ -388,7 +388,7 @@ export default function Home() {
                   }
                 }}
                 className={`hover:opacity-70 transition-opacity ${
-                customerType === 'zakelijk' ? 'text-white' : 'text-black'
+                (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
               >
                 Contact
@@ -405,27 +405,27 @@ export default function Home() {
                   }
                 }}
                 className={`hover:opacity-70 transition-opacity ${
-                customerType === 'zakelijk' ? 'text-white' : 'text-black'
+                (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
               >
                 FAQ
               </a>
               
               {/* Vertical separator between FAQ and customer type buttons */}
-              <div className={`w-px h-6 ${customerType === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'}`}></div>
+              <div className={`w-px h-6 ${(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'}`}></div>
               
               {/* Desktop Customer Type Links */}
               <button
                 onClick={() => setCustomerType('particulier')}
                 className={`hover:opacity-70 transition-opacity ${
-                  customerType === 'particulier' 
+                  (customerType as 'particulier' | 'zakelijk') === 'particulier' 
                     ? 'font-bold' 
-                    : customerType === 'zakelijk' 
+                    : (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                       ? 'text-white' 
                       : 'text-black'
                 }`}
                 style={{
-                  color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                  color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                 }}
               >
                 Particulier
@@ -433,12 +433,12 @@ export default function Home() {
               <button
                 onClick={() => setCustomerType('zakelijk')}
                 className={`hover:opacity-70 transition-opacity ${
-                  customerType === 'zakelijk' 
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                     ? 'font-bold text-white' 
                     : 'text-black'
                 }`}
                 style={{
-                  color: customerType === 'zakelijk' ? 'var(--color-accent-green)' : undefined
+                  color: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'var(--color-accent-green)' : undefined
                 }}
               >
                 Zakelijk
@@ -451,7 +451,7 @@ export default function Home() {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={`p-2 transition-colors duration-300 ${
-                  customerType === 'zakelijk' 
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                     ? 'text-white hover:text-gray-300' 
                     : 'text-black hover:text-gray-600'
                 }`}
@@ -472,7 +472,7 @@ export default function Home() {
             isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}>
             <div className={`mt-4 pb-4 border-t transition-colors duration-300 ${
-              customerType === 'zakelijk' ? 'border-gray-700' : 'border-gray-200'
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'border-gray-700' : 'border-gray-200'
             }`}>
               <div className="flex flex-col space-y-4 pt-4">
                 {/* Mobile Navigation Links */}
@@ -489,7 +489,7 @@ export default function Home() {
                     }
                   }}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
-                    customerType === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
                   }`}
                 >
                   Ons verhaal
@@ -507,7 +507,7 @@ export default function Home() {
                     }
                   }}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
-                    customerType === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
                   }`}
                 >
                   Contact
@@ -525,7 +525,7 @@ export default function Home() {
                     }
                   }}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
-                    customerType === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
                   }`}
                 >
                   FAQ
@@ -533,7 +533,7 @@ export default function Home() {
                 
                 {/* Horizontal separator */}
                 <div className={`w-full h-px ${
-                  customerType === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'
                 }`}></div>
                 
                 {/* Customer Type Links - both always visible */}
@@ -543,14 +543,14 @@ export default function Home() {
                     setIsMobileMenuOpen(false);
                   }}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
-                    customerType === 'particulier' 
+                    (customerType as 'particulier' | 'zakelijk') === 'particulier' 
                       ? 'font-bold' 
-                      : customerType === 'zakelijk' 
+                      : (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                         ? 'text-white hover:bg-gray-700' 
                         : 'text-black hover:bg-gray-100'
                   }`}
                   style={{
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 >
                   Particulier
@@ -561,12 +561,12 @@ export default function Home() {
                     setIsMobileMenuOpen(false);
                   }}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
-                    customerType === 'zakelijk' 
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                       ? 'font-bold text-white hover:bg-gray-700' 
                       : 'text-black hover:bg-gray-100'
                   }`}
                   style={{
-                    color: customerType === 'zakelijk' ? 'var(--color-accent-green)' : undefined
+                    color: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'var(--color-accent-green)' : undefined
                   }}
                 >
                   Zakelijk
@@ -578,7 +578,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section - Only for Particulier */}
-      {customerType === 'particulier' && (
+      {(customerType as 'particulier' | 'zakelijk') === 'particulier' && (
         <section ref={heroRef} className="pt-32 sm:pt-40 md:pt-48 pb-32 sm:pb-40 md:pb-48 px-4 sm:px-6 relative z-30">
         <div className="section-container">
           <div className="section-header">
@@ -606,11 +606,11 @@ export default function Home() {
           
           {/* Main Headline */}
             <h1 className={`hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`} style={{
-                  color: customerType === 'zakelijk' ? 'white' : 'var(--color-primary-dark)'
+                  color: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'white' : 'var(--color-primary-dark)'
                 }}>
-             {customerType === 'zakelijk' ? (
+             {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? (
                <>
                  Waarom <span style={{ color: 'var(--color-accent-green)' }}>overstappen</span>
               <br />
@@ -688,12 +688,12 @@ export default function Home() {
               {/* Text */}
               <div className="text-center sm:text-left">
                 <p className={`text-sm sm:text-lg font-bold transition-colors duration-300 ${
-                      customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                      (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                     }`}>
                   Vertrouwd door 20+ bedrijven
                 </p>
                     <p className={`text-xs sm:text-sm transition-colors duration-300 ${
-                      customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                      (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                     }`}>
                   in Nederland
                     </p>
@@ -713,9 +713,9 @@ export default function Home() {
 
 
       {/* Ons Verhaal Section - Only for Particulier */}
-      {customerType === 'particulier' && (
+      {(customerType as 'particulier' | 'zakelijk') === 'particulier' && (
         <section id="verhaal" className={`h-[80vh] transition-colors duration-300 relative overflow-hidden ${
-          customerType === 'zakelijk' ? 'bg-gray-800' : 'bg-white'
+          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-800' : 'bg-white'
         }`}>
         {/* Background Image */}
         <div className="absolute inset-0">
@@ -737,12 +737,12 @@ export default function Home() {
               {/* Left side - Our Mission */}
               <div className="text-left">
                 <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-white'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-white'
                 }`}>
                   Onze missie<span style={{ color: 'var(--color-accent-green)', fontSize: '1.2em' }}>.</span>
               </h2>
                 <p className={`text-lg md:text-xl leading-relaxed mb-8 transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-gray-200' : 'text-gray-100'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-200' : 'text-gray-100'
                 }`}>
                   Wij zijn drie studenten van de TU Delft met één missie: een wereld zonder single-use verpakkingen. 
                   Onze herbruikbare verpakkingen zijn gemaakt van gerecycled plastic en worden binnen een closed-loop gerecycled.
@@ -782,9 +782,9 @@ export default function Home() {
       )}
 
       {/* Help Section - Only for Particulier */}
-      {customerType === 'particulier' && (
+      {(customerType as 'particulier' | 'zakelijk') === 'particulier' && (
         <section className={`py-20 px-6 flex items-center min-h-screen transition-colors duration-300 ${
-          customerType === 'zakelijk' ? 'bg-gray-900' : 'bg-gray-50'
+          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-900' : 'bg-gray-50'
         }`}>
         <div className="max-w-7xl mx-auto w-full">
             <div className="space-y-16">
@@ -915,7 +915,7 @@ export default function Home() {
       )}
 
       {/* Business Hero Section - Exact Copy of Particulier */}
-      {customerType === 'zakelijk' && (
+      {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' && (
         <section ref={heroRef} className="pt-32 sm:pt-40 md:pt-48 pb-32 sm:pb-40 md:pb-48 px-4 sm:px-6 relative z-30">
         <div className="section-container">
           <div className="section-header">
@@ -943,9 +943,9 @@ export default function Home() {
           
           {/* Main Headline */}
             <h1 className={`hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
-              customerType === 'zakelijk' ? 'text-white' : ''
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : ''
             }`} style={{ 
-              color: customerType === 'zakelijk' ? 'white' : 'var(--color-primary-dark)' 
+              color: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'white' : 'var(--color-primary-dark)' 
             }}>
              Waarom <span style={{ color: 'var(--color-accent-green)' }}>overstappen</span>
               <br />
@@ -960,11 +960,11 @@ export default function Home() {
 
       {/* Contact Section */}
       <section ref={contactRef} id="contact" className={`py-12 sm:py-16 md:py-20 px-4 sm:px-6 transition-colors duration-300 ${
-        customerType === 'zakelijk' ? 'bg-gray-900' : 'bg-white'
+        (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-900' : 'bg-white'
       }`}>
         <div className="max-w-7xl mx-auto">
           <div className={`rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 transition-colors duration-300 ${
-            customerType === 'zakelijk' ? 'bg-gray-800' : 'bg-gray-100'
+            (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-800' : 'bg-gray-100'
           }`}>
             {/* Two blocks above the send button */}
             <div className="grid lg:grid-cols-4 gap-6 sm:gap-8 mb-12 sm:mb-16 md:mb-20">
@@ -973,7 +973,7 @@ export default function Home() {
                 {/* Main title block */}
                 <div className="text-left">
                   <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-6 transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                     }`}>
                       Neem contact op!
                   </h2>
@@ -982,7 +982,7 @@ export default function Home() {
                 {/* Subtitle block */}
                 <div className="text-left flex items-start">
                   <p className={`text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                     Heb je vragen, wil je een proefpakket aanvragen of wil je samenwerken? Laat hier je gegevens achter via ons contactformulier en we nemen zo snel mogelijk contact met je op.
                   </p>
@@ -998,7 +998,7 @@ export default function Home() {
                         type="text"
                         placeholder="Naam"
                         className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors duration-300 bg-white text-sm sm:text-base ${
-                          customerType === 'zakelijk' 
+                          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                             ? 'text-gray-900 placeholder-gray-500' 
                             : 'text-gray-900 placeholder-gray-500'
                         } focus-ring-logo`}
@@ -1009,7 +1009,7 @@ export default function Home() {
                         type="email"
                         placeholder="E-mail"
                         className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors duration-300 bg-white text-sm sm:text-base ${
-                          customerType === 'zakelijk' 
+                          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                             ? 'text-gray-900 placeholder-gray-500' 
                             : 'text-gray-900 placeholder-gray-500'
                         } focus-ring-logo`}
@@ -1020,7 +1020,7 @@ export default function Home() {
                         type="tel"
                         placeholder="Telefoonnummer"
                         className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors duration-300 bg-white text-sm sm:text-base ${
-                          customerType === 'zakelijk' 
+                          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                             ? 'text-gray-900 placeholder-gray-500' 
                             : 'text-gray-900 placeholder-gray-500'
                         } focus-ring-logo`}
@@ -1031,7 +1031,7 @@ export default function Home() {
                         type="text"
                         placeholder="Bedrijf"
                         className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors duration-300 bg-white text-sm sm:text-base ${
-                          customerType === 'zakelijk' 
+                          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                             ? 'text-gray-900 placeholder-gray-500' 
                             : 'text-gray-900 placeholder-gray-500'
                         } focus-ring-logo`}
@@ -1042,7 +1042,7 @@ export default function Home() {
                         placeholder="Bericht"
                         rows={3}
                         className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg transition-colors duration-300 resize-none bg-white text-sm sm:text-base ${
-                          customerType === 'zakelijk' 
+                          (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                             ? 'text-gray-900 placeholder-gray-500' 
                             : 'text-gray-900 placeholder-gray-500'
                         } focus-ring-logo`}
@@ -1050,7 +1050,7 @@ export default function Home() {
                     </div>
                     <div className="pt-4">
                       <button className={`w-full px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
-                  customerType === 'zakelijk' 
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                           ? 'bg-gray-700 hover:bg-gray-600 text-white' 
                           : 'bg-gray-900 hover:bg-gray-800 text-white'
                       }`}>
@@ -1075,7 +1075,7 @@ export default function Home() {
 
       {/* FAQ Section */}
       <section id="faq" className={`py-20 pb-32 px-6 transition-colors duration-300 rounded-b-3xl ${
-        customerType === 'zakelijk' 
+        (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
           ? 'bg-gray-900' 
           : 'bg-white'
       }`}>
@@ -1084,11 +1084,11 @@ export default function Home() {
           <div className="text-center mb-16">
             <div className="flex items-center justify-center mb-6">
               <div className="px-4 py-2 rounded-full bg-gray-100 text-sm font-medium text-gray-600">
-                {customerType === 'zakelijk' ? 'FAQ (Zakelijk)' : 'FAQ (Consument)'}
+                {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'FAQ (Zakelijk)' : 'FAQ (Consument)'}
               </div>
             </div>
             <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
-              customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
             }`}>
               Veelgestelde <span className="scribble-underline" style={{ color: 'var(--color-accent-green)' }}>Vragen</span>
             </h2>
@@ -1096,12 +1096,12 @@ export default function Home() {
 
           {/* FAQ Items */}
           <div className="space-y-4">
-            {customerType === 'zakelijk' ? (
+            {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? (
               /* Business FAQ */
               <>
                 {/* Business FAQ 1 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1110,7 +1110,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Waarom zou ik kiezen voor herbruikbare verpakkingen in plaats van karton?
                 </h3>
@@ -1123,8 +1123,8 @@ export default function Home() {
                     openFAQ === 0 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1135,7 +1135,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         Op korte termijn kan karton goedkoper lijken, maar bij herhaalde inzet verlagen herbruikbare dozen de kosten per zending, verminderen retourstromen en versterken ze uw duurzame merkpositionering. Daarnaast beperken ze afvalstromen en CO₂-uitstoot. Hoe dit precies werkt, leggen we u graag uit in een adviesgesprek.
                   </p>
@@ -1145,7 +1145,7 @@ export default function Home() {
 
                 {/* Business FAQ 2 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1154,7 +1154,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Wie is verantwoordelijk bij schade of productverlies?
                 </h3>
@@ -1167,8 +1167,8 @@ export default function Home() {
                     openFAQ === 1 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1179,7 +1179,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         Wij adviseren en ondersteunen contractuele afspraken. In veel cases is de leverancier verantwoordelijk voor de verpakking. We adviseren altijd om productaansprakelijkheid en AVB met uw verzekeraar te bespreken.
                   </p>
@@ -1189,7 +1189,7 @@ export default function Home() {
 
                 {/* Business FAQ 3 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1198,7 +1198,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Wat zijn de logistieke vereisten?
                 </h3>
@@ -1211,8 +1211,8 @@ export default function Home() {
                     openFAQ === 2 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1223,7 +1223,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         Onze dozen zijn ontworpen voor standaard handling. We leveren logistieke specificaties (afmetingen, stapelbelasting, retour qr-code) zodat uw fulfilmentpartner soepel op kan schalen.
                   </p>
@@ -1233,7 +1233,7 @@ export default function Home() {
 
                 {/* Business FAQ 4 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1242,7 +1242,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Hoe garanderen jullie hygiëne en reiniging?
                 </h3>
@@ -1255,8 +1255,8 @@ export default function Home() {
                     openFAQ === 3 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1267,7 +1267,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-sm leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         Wij inspecteren de geretourneerde verpakkingen grondig en reinigen waar nodig de verpakking. Voor gevoelige producten bespreken we extra eisen en kunnen we aangepaste reinigingsprotocollen vastleggen.
                   </p>
@@ -1277,7 +1277,7 @@ export default function Home() {
 
                 {/* Business FAQ 5 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1286,7 +1286,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Kan de verpakking mijn branding hebben?
                 </h3>
@@ -1299,8 +1299,8 @@ export default function Home() {
                     openFAQ === 4 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1311,7 +1311,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-base leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         Op dit moment niet voor kleine oplages, er is meer mogelijk bij oplages boven de 10.000 verpakkingen.
                   </p>
@@ -1321,7 +1321,7 @@ export default function Home() {
 
                 {/* Business FAQ 6 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1330,7 +1330,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Kan de verpakking mijn branding hebben?
                 </h3>
@@ -1343,8 +1343,8 @@ export default function Home() {
                     openFAQ === 5 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1355,7 +1355,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-base leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         Op dit moment niet voor kleine oplages, er is meer mogelijk bij oplages boven de 10.000 verpakkingen.
                   </p>
@@ -1365,7 +1365,7 @@ export default function Home() {
 
                 {/* Business FAQ 7 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              customerType === 'zakelijk' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                 ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
@@ -1374,7 +1374,7 @@ export default function Home() {
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
                 <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  customerType === 'zakelijk' ? 'text-white' : 'text-gray-900'
+                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Hoe zit het met verlies en vervangingen?
                 </h3>
@@ -1387,8 +1387,8 @@ export default function Home() {
                     openFAQ === 6 ? 'rotate-180' : ''
                   }`}
                   style={{ 
-                    filter: customerType === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: customerType === 'particulier' ? 'var(--color-accent-green)' : undefined
+                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
+                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
@@ -1399,7 +1399,7 @@ export default function Home() {
               >
                 <div className="px-6 pb-6">
                   <p className={`text-base leading-relaxed transition-colors duration-300 ${
-                    customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                         We monitoren retourratio&apos;s en verwerken vervangingen in abonnementsmodellen. Tarieven per gebruik houden rekening met verwachte verliespercentages, daarnaast betaald de consument ook statiegeld, zo komen er nooit onverwachte kosten bij u terecht.
                   </p>
