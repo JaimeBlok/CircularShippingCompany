@@ -1439,7 +1439,7 @@ export default function Home() {
                   <p className={`text-base leading-relaxed transition-colors duration-300 ${
                     customerType === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
-                        We monitoren retourratio's en verwerken vervangingen in abonnementsmodellen. Tarieven per gebruik houden rekening met verwachte verliespercentages, daarnaast betaald de consument ook statiegeld, zo komen er nooit onverwachte kosten bij u terecht.
+                        We monitoren retourratio&apos;s en verwerken vervangingen in abonnementsmodellen. Tarieven per gebruik houden rekening met verwachte verliespercentages, daarnaast betaald de consument ook statiegeld, zo komen er nooit onverwachte kosten bij u terecht.
                   </p>
               </div>
               </div>
