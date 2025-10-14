@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -13,19 +15,35 @@ if (typeof window !== 'undefined') {
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
-  
-  // State for customer type selection
-  const [customerType, setCustomerType] = useState<'particulier' | 'zakelijk'>('particulier');
+  const searchParams = useSearchParams();
+
+  // State for customer type selection - read from URL params
+  const [customerType, setCustomerType] = useState<'particulier' | 'zakelijk'>(
+    (searchParams.get('type') as 'particulier' | 'zakelijk') || 'particulier'
+  );
   
   // State for language selection
   const [language, setLanguage] = useState<'en' | 'nl'>('en');
-  
+
   // State for FAQ accordion
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const faqRefs = useRef<(HTMLDivElement | null)[]>([]);
-  
+
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Update URL when customer type changes
+  useEffect(() => {
+    const currentParams = new URLSearchParams(window.location.search);
+    if (customerType === 'zakelijk') {
+      currentParams.set('type', 'zakelijk');
+    } else {
+      currentParams.delete('type');
+    }
+
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+    window.history.replaceState({}, '', newUrl);
+  }, [customerType]);
   
 
   // FAQ toggle function with GSAP animation
@@ -143,31 +161,6 @@ export default function Home() {
     
     window.addEventListener('scroll', handleParallax, { passive: true });
 
-    // Hero animations
-    const heroTitle = heroRef.current?.querySelector('.hero-title');
-    const heroSubtitle = heroRef.current?.querySelector('.hero-subtitle');
-    const heroButtons = heroRef.current?.querySelector('.hero-buttons');
-
-    if (heroTitle) {
-      gsap.fromTo(heroTitle, 
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, delay: 0.2 }
-      );
-    }
-
-    if (heroSubtitle) {
-      gsap.fromTo(heroSubtitle, 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.8, delay: 0.6 }
-      );
-    }
-
-    if (heroButtons) {
-      gsap.fromTo(heroButtons, 
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, delay: 1 }
-      );
-    }
 
 
 
@@ -345,31 +338,24 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-        <Image
-                src="/LogoMain.png"
-                alt="Circular Shipping Company"
-                width={200}
-                height={80}
-                className={`h-10 sm:h-12 w-auto transition-all duration-300 ${
-                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness-0 invert' : ''
-                }`}
-          priority
-        />
+              <a href="/" className="hover:opacity-80 transition-opacity">
+                <Image
+                  src="/LogoMain.png"
+                  alt="Circular Shipping Company"
+                  width={200}
+                  height={80}
+                  className={`h-10 sm:h-12 w-auto transition-all duration-300 ${
+                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness-0 invert' : ''
+                  }`}
+                  priority
+                />
+              </a>
             </div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <a 
-                href="#verhaal" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById('verhaal');
-                  if (element) {
-                    const headerHeight = 80;
-                    const elementPosition = element.offsetTop - headerHeight;
-                    window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                  }
-                }}
+                href="/verhaal"
                 className={`hover:opacity-70 transition-opacity ${
                 (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
@@ -393,8 +379,8 @@ export default function Home() {
               >
                 Contact
               </a>
-              <a 
-                href="#faq" 
+              <a
+                href="#faq"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.getElementById('faq');
@@ -410,7 +396,24 @@ export default function Home() {
               >
                 FAQ
               </a>
-              
+
+              {/* Verpakking inleveren button */}
+              <a
+                href="/inleverpunten"
+                className="inline-block text-white px-4 py-2 rounded-full font-medium transition-colors duration-300 text-sm"
+                style={{
+                  backgroundColor: 'var(--color-accent-green)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-green-dark)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'var(--color-accent-green)';
+                }}
+              >
+                Verpakking inleveren
+              </a>
+
               {/* Vertical separator between FAQ and customer type buttons */}
               <div className={`w-px h-6 ${(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'}`}></div>
               
@@ -469,7 +472,7 @@ export default function Home() {
           
           {/* Mobile Menu */}
           <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            isMobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}>
             <div className={`mt-4 pb-4 border-t transition-colors duration-300 ${
               (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'border-gray-700' : 'border-gray-200'
@@ -477,17 +480,8 @@ export default function Home() {
               <div className="flex flex-col space-y-4 pt-4">
                 {/* Mobile Navigation Links */}
                 <a 
-                  href="#verhaal" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    const element = document.getElementById('verhaal');
-                    if (element) {
-                      const headerHeight = 80;
-                      const elementPosition = element.offsetTop - headerHeight;
-                      window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                    }
-                  }}
+                  href="/verhaal"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
                     (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
                   }`}
@@ -512,8 +506,8 @@ export default function Home() {
                 >
                   Contact
                 </a>
-                <a 
-                  href="#faq" 
+                <a
+                  href="#faq"
                   onClick={(e) => {
                     e.preventDefault();
                     setIsMobileMenuOpen(false);
@@ -530,7 +524,25 @@ export default function Home() {
                 >
                   FAQ
                 </a>
-                
+
+                {/* Verpakking inleveren button - mobile */}
+                <a
+                  href="/inleverpunten"
+                  className="block text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 text-left text-sm"
+                  style={{
+                    backgroundColor: 'var(--color-accent-green)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-green-dark)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--color-accent-green)';
+                  }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Verpakking inleveren
+                </a>
+
                 {/* Horizontal separator */}
                 <div className={`w-full h-px ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'
@@ -612,9 +624,11 @@ export default function Home() {
                 }}>
              {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? (
                <>
-                 Waarom <span style={{ color: 'var(--color-accent-green)' }}>overstappen</span>
-              <br />
-                   naar herbruikbare verpakkingen?
+                 Waarom <span style={{ color: 'var(--color-accent-green)' }}>Overstappen</span>
+                 <br />
+                 naar herbruikbare
+                 <br />
+                 verpakkingen?
                </>
              ) : (
                <>
@@ -637,18 +651,9 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
             {/* Left side - CTA Button */}
             <div className="flex-shrink-0">
-              <button className="cta-button cta-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4 flex items-center gap-2" 
+              <button className="cta-button cta-primary text-sm sm:text-base px-6 py-3 sm:px-8 sm:py-4"
                     style={{ backgroundColor: 'var(--color-primary-dark)' }}>
               Ontdek meer
-                  <svg 
-                    className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                    style={{ color: 'var(--color-accent-green)' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7m0 0H7m10 0v10" />
-                  </svg>
               </button>
           </div>
           
@@ -747,29 +752,12 @@ export default function Home() {
                   Wij zijn drie studenten van de TU Delft met één missie: een wereld zonder single-use verpakkingen. 
                   Onze herbruikbare verpakkingen zijn gemaakt van gerecycled plastic en worden binnen een closed-loop gerecycled.
                 </p>
-                <button 
-                  onClick={() => {
-                    // Scroll to contact section where FAQ is located
-                    const element = document.getElementById('faq');
-                    if (element) {
-                      const headerHeight = 80;
-                      const elementPosition = element.offsetTop - headerHeight;
-                      window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                    }
-                  }}
-                  className="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+                <a
+                  href="/verhaal"
+                  className="inline-block bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   Ons verhaal
-                  <svg 
-                    className="w-4 h-4" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                    style={{ color: 'var(--color-accent-green)' }}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7m0 0H7m10 0v10" />
-                  </svg>
-                </button>
+                </a>
                 </div>
                 
               {/* Right side - Empty for now */}
@@ -792,16 +780,16 @@ export default function Home() {
               {/* Block 1 - Text First on Mobile, Image Left on Desktop */}
               <div className="flex flex-col lg:flex-row gap-8 items-center">
                 <div className="w-full lg:w-1/2 flex flex-col justify-center order-1 lg:order-2 p-8 lg:p-12">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-6">Hoe kan ik helpen?</h3>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-6">Ik heb een pakket ontvangen</h3>
                   <p className="text-gray-600 leading-relaxed mb-8 text-lg">
-                    Wil je bijdragen aan een duurzamere wereld? Er zijn verschillende manieren waarop je kunt helpen om herbruikbare verpakkingen de norm te maken.
+                    Heb je een herbruikbare verpakking ontvangen? Leer hoe je deze kunt terugsturen en bijdraagt aan de circulaire economie.
                   </p>
                   <button className="hidden lg:flex bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-300 items-center gap-2 w-fit">
-                    Meer informatie
+                    Terugsturen
                     <Image
-                      src="/Arrow.png" 
-                      alt="Arrow" 
-                      width={16} 
+                      src="/Arrow.png"
+                      alt="Arrow"
+                      width={16}
                       height={16}
                       className="w-4 h-4 brightness-0 invert"
                     />
@@ -809,18 +797,18 @@ export default function Home() {
                   </div>
                 <div className="w-full lg:w-1/2 order-2 lg:order-1">
                   <div className="relative h-80 lg:h-96 rounded-3xl overflow-hidden shadow-xl">
-                    <div className="w-full h-full bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
                       <svg className="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--color-accent-green)' }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
                 </div>
                     {/* Mobile CTA Button - Bottom Right */}
                     <button className="lg:hidden absolute bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2 text-sm">
-                      Meer informatie
+                      Terugsturen
                   <Image
-                        src="/Arrow.png" 
-                        alt="Arrow" 
-                        width={14} 
+                        src="/Arrow.png"
+                        alt="Arrow"
+                        width={14}
                         height={14}
                         className="w-3.5 h-3.5 brightness-0 invert"
                       />
@@ -832,38 +820,24 @@ export default function Home() {
               {/* Block 2 - Text First on Mobile, Text Left on Desktop */}
               <div className="flex flex-col lg:flex-row gap-8 items-center">
                 <div className="w-full lg:w-1/2 flex flex-col justify-center order-1 lg:order-1 p-8 lg:p-12">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-6">Ik heb een pakket ontvangen</h3>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-6">Hoe kan ik helpen?</h3>
                   <p className="text-gray-600 leading-relaxed mb-8 text-lg">
-                    Heb je een herbruikbare verpakking ontvangen? Leer hoe je deze kunt terugsturen en bijdraagt aan de circulaire economie.
+                    Wil je bijdragen aan een duurzamere wereld? Er zijn verschillende manieren waarop je kunt helpen om herbruikbare verpakkingen de norm te maken.
                   </p>
-                  <button className="hidden lg:flex bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-300 items-center gap-2 w-fit">
-                    Terugsturen
-                    <Image
-                      src="/Arrow.png" 
-                      alt="Arrow" 
-                      width={16} 
-                      height={16}
-                      className="w-4 h-4 brightness-0 invert"
-                    />
+                  <button className="hidden lg:flex bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-300 w-fit">
+                    Ik wil helpen!
                   </button>
                   </div>
                 <div className="w-full lg:w-1/2 order-2 lg:order-2">
                   <div className="relative h-80 lg:h-96 rounded-3xl overflow-hidden shadow-xl">
-                    <div className="w-full h-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center">
                       <svg className="w-32 h-32" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--color-accent-green)' }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                 </div>
                     {/* Mobile CTA Button - Bottom Right */}
-                    <button className="lg:hidden absolute bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center gap-2 text-sm">
-                      Terugsturen
-                  <Image
-                        src="/Arrow.png" 
-                        alt="Arrow" 
-                        width={14} 
-                        height={14}
-                        className="w-3.5 h-3.5 brightness-0 invert"
-                      />
+                    <button className="lg:hidden absolute bottom-4 right-4 bg-gray-900 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-300 text-sm">
+                      Ik wil helpen!
                     </button>
               </div>
             </div>
@@ -916,7 +890,7 @@ export default function Home() {
 
       {/* Business Hero Section - Exact Copy of Particulier */}
       {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' && (
-        <section ref={heroRef} className="pt-32 sm:pt-40 md:pt-48 pb-32 sm:pb-40 md:pb-48 px-4 sm:px-6 relative z-30">
+        <section ref={heroRef} className="pt-32 sm:pt-40 md:pt-48 pb-8 sm:pb-12 md:pb-16 px-4 sm:px-6 relative z-30">
         <div className="section-container">
           <div className="section-header">
           {/* Hero Icon */}
@@ -942,18 +916,180 @@ export default function Home() {
           </div>
           
           {/* Main Headline */}
-            <h1 className={`hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
+            <h1 className={`hero-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
               (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : ''
-            }`} style={{ 
-              color: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'white' : 'var(--color-primary-dark)' 
+            }`} style={{
+              color: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'white' : 'var(--color-primary-dark)'
             }}>
-             Waarom <span style={{ color: 'var(--color-accent-green)' }}>overstappen</span>
-              <br />
-                naar herbruikbare verpakkingen?
+             Waarom <span style={{ color: 'var(--color-accent-green)' }}>Overstappen</span>
+             <br />
+             naar herbruikbare verpakkingen?
             </h1>
           </div>
         </div>
       </section>
+      )}
+
+      {/* Business Reasons Section */}
+      {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' && (
+        <section className="pt-4 pb-24 sm:pt-6 sm:pb-32 px-4 sm:px-6 bg-gray-900">
+          <div className="section-container">
+            <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+              {/* Reason 1 - Reusable */}
+              <div className="text-center">
+                <div className="mb-6 flex justify-center">
+                  <Image
+                    src="/Logo_CircularShippingCo._boxcircle.png"
+                    alt="CircularShippingCo Logo"
+                    width={64}
+                    height={64}
+                    className="w-16 h-16"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Herbruikbaar</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Gemaakt van gerecycled plastic bespaart 80% CO₂. Minder dan 6 hergebruiken om break-even te bereiken (CO₂)
+                </p>
+              </div>
+
+              {/* Reason 2 - Cheaper */}
+              <div className="text-center">
+                <div className="mb-6 flex justify-center">
+                  <Image
+                    src="/Logo_CircularShippingCo._boxcircle.png"
+                    alt="CircularShippingCo Logo"
+                    width={64}
+                    height={64}
+                    className="w-16 h-16"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Goedkoper</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Break-even na slechts 12 maanden (B2B)<br />
+                  Goedkoper dan karton (B2C)
+                </p>
+              </div>
+
+              {/* Reason 3 - Foldable */}
+              <div className="text-center">
+                <div className="mb-6 flex justify-center">
+                  <Image
+                    src="/Logo_CircularShippingCo._boxcircle.png"
+                    alt="CircularShippingCo Logo"
+                    width={64}
+                    height={64}
+                    className="w-16 h-16"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Opvouwbaar</h3>
+                <p className="text-gray-300 leading-relaxed">
+                  Makkelijk in te leveren<br />
+                  Houd emissies laag bij retour
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Business Experiences Section */}
+      {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' && (
+        <section className="py-24 sm:py-32 px-4 sm:px-6 bg-gray-800">
+          <div className="section-container">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
+                Ervaringen<span style={{ color: 'var(--color-accent-green)' }}>.</span>
+              </h2>
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+                Ontdek wat onze zakelijke partners zeggen over herbruikbare verpakkingen
+              </p>
+            </div>
+            
+            <div className="space-y-12">
+              {/* Company 1 - TechCorp */}
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div className="flex items-center justify-center">
+                  <Image
+                    src="/next.svg"
+                    alt="TechCorp Logo"
+                    width={100}
+                    height={32}
+                    className="h-8 w-auto brightness-0 invert"
+                  />
+                </div>
+                <div className="bg-gray-700 rounded-2xl p-6 shadow-lg">
+                  <blockquote className="text-white text-lg leading-relaxed mb-4">
+                    "Herbruikbare verpakkingen hebben onze verzendkosten met 30% verlaagd en dragen bij aan onze duurzaamheidsdoelstellingen."
+                  </blockquote>
+                  <div className="text-gray-300 text-sm">
+                    <strong>Sarah van der Berg</strong><br />
+                    Operations Manager, TechCorp
+                  </div>
+                </div>
+              </div>
+
+              {/* Company 2 - GreenLogistics */}
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div className="flex items-center justify-center">
+                  <Image
+                    src="/next.svg"
+                    alt="GreenLogistics Logo"
+                    width={100}
+                    height={32}
+                    className="h-8 w-auto brightness-0 invert"
+                  />
+                </div>
+                <div className="bg-gray-700 rounded-2xl p-6 shadow-lg">
+                  <blockquote className="text-white text-lg leading-relaxed mb-4">
+                    "De klanttevredenheid is gestegen omdat ze zich bewust zijn van onze milieuvriendelijke aanpak. Een win-win situatie."
+                  </blockquote>
+                  <div className="text-gray-300 text-sm">
+                    <strong>Mark Janssen</strong><br />
+                    CEO, GreenLogistics
+                  </div>
+                </div>
+              </div>
+
+              {/* Company 3 - EcoRetail */}
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div className="flex items-center justify-center">
+                  <Image
+                    src="/next.svg"
+                    alt="EcoRetail Logo"
+                    width={100}
+                    height={32}
+                    className="h-8 w-auto brightness-0 invert"
+                  />
+                </div>
+                <div className="bg-gray-700 rounded-2xl p-6 shadow-lg">
+                  <blockquote className="text-white text-lg leading-relaxed mb-4">
+                    "Efficiëntie en duurzaamheid gaan hand in hand. Onze klanten waarderen de professionele uitstraling van de herbruikbare dozen."
+                  </blockquote>
+                  <div className="text-gray-300 text-sm">
+                    <strong>Lisa de Vries</strong><br />
+                    Supply Chain Director, EcoRetail
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Business Packaging & Pricing Section */}
+      {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' && (
+        <section className="py-24 sm:py-32 px-4 sm:px-6 bg-gray-900">
+          <div className="section-container">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
+                Verpakkingen en Tarieven<span style={{ color: 'var(--color-accent-green)' }}>.</span>
+              </h2>
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+                Ontdek onze herbruikbare verpakkingen en transparante prijsstructuur
+              </p>
+            </div>
+          </div>
+        </section>
       )}
 
 
@@ -967,12 +1103,12 @@ export default function Home() {
             (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-800' : 'bg-gray-100'
           }`}>
             {/* Two blocks above the send button */}
-            <div className="grid lg:grid-cols-4 gap-6 sm:gap-8 mb-12 sm:mb-16 md:mb-20">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 mb-12 sm:mb-16 md:mb-20">
               {/* Left side - Text blocks */}
-              <div className="space-y-6 sm:space-y-8 lg:col-span-2">
+              <div className="space-y-6 sm:space-y-8">
                 {/* Main title block */}
                 <div className="text-left">
-                  <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-6 transition-colors duration-300 ${
+                  <h2 className={`text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4 sm:mb-6 transition-colors duration-300 ${
                     (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                     }`}>
                       Neem contact op!
@@ -981,7 +1117,7 @@ export default function Home() {
                 
                 {/* Subtitle block */}
                 <div className="text-left flex items-start">
-                  <p className={`text-base sm:text-lg md:text-xl lg:text-2xl max-w-2xl transition-colors duration-300 ${
+                  <p className={`text-base sm:text-lg md:text-xl leading-relaxed transition-colors duration-300 ${
                     (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
                     Heb je vragen, wil je een proefpakket aanvragen of wil je samenwerken? Laat hier je gegevens achter via ons contactformulier en we nemen zo snel mogelijk contact met je op.
@@ -990,8 +1126,8 @@ export default function Home() {
               </div>
 
               {/* Right side - Contact form */}
-              <div className="flex items-start lg:col-span-2">
-                <div className="rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full">
+              <div className="flex items-start">
+                <div className="w-full">
                   <form className="space-y-3 sm:space-y-4">
                     <div>
                       <input
@@ -1087,7 +1223,7 @@ export default function Home() {
                 {(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'FAQ (Zakelijk)' : 'FAQ (Consument)'}
               </div>
             </div>
-            <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
+            <h2 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 leading-none transition-colors duration-300 ${
               (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
             }`}>
               Veelgestelde <span className="scribble-underline" style={{ color: 'var(--color-accent-green)' }}>Vragen</span>
@@ -1109,7 +1245,7 @@ export default function Home() {
                 onClick={() => toggleFAQ(0)}
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                <h3 className={`text-xl transition-colors duration-300 ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Waarom zou ik kiezen voor herbruikbare verpakkingen in plaats van karton?
@@ -1153,7 +1289,7 @@ export default function Home() {
                 onClick={() => toggleFAQ(1)}
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                <h3 className={`text-xl transition-colors duration-300 ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Wie is verantwoordelijk bij schade of productverlies?
@@ -1197,7 +1333,7 @@ export default function Home() {
                 onClick={() => toggleFAQ(2)}
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                <h3 className={`text-xl transition-colors duration-300 ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Wat zijn de logistieke vereisten?
@@ -1241,7 +1377,7 @@ export default function Home() {
                 onClick={() => toggleFAQ(3)}
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                <h3 className={`text-xl transition-colors duration-300 ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Hoe garanderen jullie hygiëne en reiniging?
@@ -1285,7 +1421,7 @@ export default function Home() {
                 onClick={() => toggleFAQ(4)}
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                <h3 className={`text-xl transition-colors duration-300 ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Kan de verpakking mijn branding hebben?
@@ -1313,87 +1449,44 @@ export default function Home() {
                   <p className={`text-base leading-relaxed transition-colors duration-300 ${
                     (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
                   }`}>
-                        Op dit moment niet voor kleine oplages, er is meer mogelijk bij oplages boven de 10.000 verpakkingen.
+                        Op dit moment niet voor kleine oplages, er is meer mogelijk bij oplages boven de 1000 verpakkingen.
                   </p>
               </div>
               </div>
             </div>
 
+
                 {/* Business FAQ 6 */}
             <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
-                ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
+              (customerType as 'particulier' | 'zakelijk') === 'zakelijk'
+                ? 'bg-gray-800 border-gray-700 hover:bg-gray-700'
                 : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
             }`}>
               <button
                 onClick={() => toggleFAQ(5)}
                 className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
               >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
-                  (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
-                }`}>
-                      Kan de verpakking mijn branding hebben?
-                </h3>
-                <Image 
-                  src="/ReverseArrow.png" 
-                  alt="Arrow" 
-                  width={24} 
-                  height={24}
-                  className={`w-6 h-6 transition-transform duration-300 ${
-                    openFAQ === 5 ? 'rotate-180' : ''
-                  }`}
-                  style={{ 
-                    filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
-                    color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
-                  }}
-                />
-              </button>
-              <div 
-                ref={(el) => { faqRefs.current[5] = el; }}
-                className="overflow-hidden"
-                style={{ height: 0 }}
-              >
-                <div className="px-6 pb-6">
-                  <p className={`text-base leading-relaxed transition-colors duration-300 ${
-                    (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
-                        Op dit moment niet voor kleine oplages, er is meer mogelijk bij oplages boven de 10.000 verpakkingen.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-                {/* Business FAQ 7 */}
-            <div className={`rounded-2xl border transition-all duration-300 overflow-hidden group ${
-              (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
-                ? 'bg-gray-800 border-gray-700 hover:bg-gray-700' 
-                : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-            }`}>
-              <button
-                onClick={() => toggleFAQ(6)}
-                className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
-              >
-                <h3 className={`text-xl font-semibold transition-colors duration-300 ${
+                <h3 className={`text-xl transition-colors duration-300 ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-gray-900'
                 }`}>
                       Hoe zit het met verlies en vervangingen?
                 </h3>
-                <Image 
-                  src="/ReverseArrow.png" 
-                  alt="Arrow" 
-                  width={24} 
+                <Image
+                  src="/ReverseArrow.png"
+                  alt="Arrow"
+                  width={24}
                   height={24}
                   className={`w-6 h-6 transition-transform duration-300 ${
-                    openFAQ === 6 ? 'rotate-180' : ''
+                    openFAQ === 5 ? 'rotate-180' : ''
                   }`}
-                  style={{ 
+                  style={{
                     filter: (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'brightness(0) invert(1)' : 'none',
                     color: (customerType as 'particulier' | 'zakelijk') === 'particulier' ? 'var(--color-accent-green)' : undefined
                   }}
                 />
               </button>
-              <div 
-                ref={(el) => { faqRefs.current[6] = el; }}
+              <div
+                ref={(el) => { faqRefs.current[5] = el; }}
                 className="overflow-hidden"
                 style={{ height: 0 }}
               >
@@ -1416,7 +1509,7 @@ export default function Home() {
                     onClick={() => toggleFAQ(0)}
                     className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
                   >
-                    <h3 className="text-xl font-semibold transition-colors duration-300 text-gray-900">
+                    <h3 className="text-xl transition-colors duration-300 text-gray-900">
                       Waarom is een herbruikbare verpakking duurzamer dan karton?
                     </h3>
                     <Image 
@@ -1452,7 +1545,7 @@ export default function Home() {
                     onClick={() => toggleFAQ(1)}
                     className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
                   >
-                    <h3 className="text-xl font-semibold transition-colors duration-300 text-gray-900">
+                    <h3 className="text-xl transition-colors duration-300 text-gray-900">
                       Hoe lever ik de doos in?
                     </h3>
                     <Image 
@@ -1488,7 +1581,7 @@ export default function Home() {
                     onClick={() => toggleFAQ(2)}
                     className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
                   >
-                    <h3 className="text-xl font-semibold transition-colors duration-300 text-gray-900">
+                    <h3 className="text-xl transition-colors duration-300 text-gray-900">
                       Is de doos schoon en veilig?
                     </h3>
                     <Image 
@@ -1524,7 +1617,7 @@ export default function Home() {
                     onClick={() => toggleFAQ(3)}
                     className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
                   >
-                    <h3 className="text-xl font-semibold transition-colors duration-300 text-gray-900">
+                    <h3 className="text-xl transition-colors duration-300 text-gray-900">
                       Wat als de doos beschadigd is?
                     </h3>
                     <Image 
@@ -1560,7 +1653,7 @@ export default function Home() {
                     onClick={() => toggleFAQ(4)}
                     className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
                   >
-                    <h3 className="text-xl font-semibold transition-colors duration-300 text-gray-900">
+                    <h3 className="text-xl transition-colors duration-300 text-gray-900">
                       Moet ik betalen voor het terugbrengen?
                 </h3>
                     <Image 
@@ -1596,7 +1689,7 @@ export default function Home() {
                     onClick={() => toggleFAQ(5)}
                     className="w-full p-6 text-left flex items-center justify-between transition-colors duration-300"
                   >
-                    <h3 className="text-xl font-semibold transition-colors duration-300 text-gray-900">
+                    <h3 className="text-xl transition-colors duration-300 text-gray-900">
                       Mijn drop-off punt is vol/gesloten — wat nu?
                     </h3>
                     <Image 
