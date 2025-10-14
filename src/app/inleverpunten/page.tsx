@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
@@ -12,12 +12,12 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function InleverpuntenPage() {
+function InleverpuntenPageContent() {
   const heroRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
 
   // State for customer type selection - read from URL params
-  const [customerType, setCustomerType] = useState<'particulier' | 'zakelijk'>(
+  const [customerType] = useState<'particulier' | 'zakelijk'>(
     (searchParams.get('type') as 'particulier' | 'zakelijk') || 'particulier'
   );
   
@@ -178,11 +178,11 @@ export default function InleverpuntenPage() {
   // State for address search
   const [searchAddress, setSearchAddress] = useState('');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [nearestLocation, setNearestLocation] = useState<string | null>(null);
+  const [, setNearestLocation] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [sortedLocations, setSortedLocations] = useState(locations);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestions, setSuggestions] = useState<Array<{id: string, name: string, address: string}>>([]);
+  const [suggestions, setSuggestions] = useState<Array<{id: string, name: string, address: string, type: 'location' | 'address', coordinates?: {lat: number, lng: number}}>>([]);
 
   // Function to calculate distance between two coordinates (Haversine formula)
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
@@ -398,37 +398,6 @@ export default function InleverpuntenPage() {
     }
   };
 
-  // Function to get user location
-  const getUserLocation = () => {
-    setIsLoading(true);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userCoords = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          setUserLocation(userCoords);
-          const nearest = findNearestLocation(userCoords.lat, userCoords.lng);
-          setNearestLocation(nearest.id);
-          setSelectedLocation(nearest.id);
-          
-          // Sort locations by distance
-          const sorted = sortLocationsByDistance(userCoords.lat, userCoords.lng);
-          setSortedLocations(sorted);
-          
-          setIsLoading(false);
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          setIsLoading(false);
-        }
-      );
-    } else {
-      alert('Geolocation is not supported by this browser.');
-      setIsLoading(false);
-    }
-  };
 
   // Update URL when customer type changes
   useEffect(() => {
@@ -676,7 +645,7 @@ export default function InleverpuntenPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <a href="/" className="hover:opacity-80 transition-opacity">
+              <Link href="/" className="hover:opacity-80 transition-opacity">
                 <Image
                   src="/LogoMain.png"
                   alt="Circular Shipping Company"
@@ -687,28 +656,19 @@ export default function InleverpuntenPage() {
                   }`}
                   priority
                 />
-              </a>
+              </Link>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="#verhaal"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById('verhaal');
-                  if (element) {
-                    const headerHeight = 80;
-                    const elementPosition = element.offsetTop - headerHeight;
-                    window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                  }
-                }}
+              <Link
+                href="/verhaal"
                 className={`hover:opacity-70 transition-opacity ${
                 (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
               >
                 Ons verhaal
-              </a>
+              </Link>
               <a
                 href="#contact"
                 onClick={(e) => {
@@ -765,17 +725,12 @@ export default function InleverpuntenPage() {
               <div className={`w-px h-6 ${(customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300'}`}></div>
 
               {/* Desktop Customer Type Links */}
-              <a
-                href="/#top"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = '/';
-                  window.scrollTo(0, 0);
-                }}
+              <Link
+                href="/"
                 className={`hover:opacity-70 transition-opacity ${
-                  (customerType as 'particulier' | 'zakelijk') === 'particulier' 
+                  (customerType as 'particulier' | 'zakelijk') === 'particulier'
                     ? 'font-bold'
-                    : (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
+                    : (customerType as 'particulier' | 'zakelijk') === 'zakelijk'
                       ? 'text-white'
                       : 'text-black'
                 }`}
@@ -784,14 +739,9 @@ export default function InleverpuntenPage() {
                 }}
               >
                 Particulier
-              </a>
-              <a
-                href="/?type=zakelijk#top"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = '/?type=zakelijk';
-                  window.scrollTo(0, 0);
-                }}
+              </Link>
+              <Link
+                href="/?type=zakelijk"
                 className={`hover:opacity-70 transition-opacity ${
                   (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                     ? 'font-bold text-white'
@@ -802,7 +752,7 @@ export default function InleverpuntenPage() {
                 }}
               >
                 Zakelijk
-              </a>
+              </Link>
             </div>
 
 
@@ -836,24 +786,15 @@ export default function InleverpuntenPage() {
             }`}>
               <div className="flex flex-col space-y-4 pt-4">
                 {/* Mobile Navigation Links */}
-                <a
-                  href="#verhaal"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    const element = document.getElementById('verhaal');
-                    if (element) {
-                      const headerHeight = 80;
-                      const elementPosition = element.offsetTop - headerHeight;
-                      window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                    }
-                  }}
+                <Link
+                  href="/verhaal"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
                     (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
                   }`}
                 >
                   Ons verhaal
-                </a>
+                </Link>
                 <a
                   href="#contact"
                   onClick={(e) => {
@@ -915,14 +856,9 @@ export default function InleverpuntenPage() {
                 }`}></div>
 
                 {/* Customer Type Links - both always visible */}
-                <a
-                  href="/#top"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    window.location.href = '/';
-                    window.scrollTo(0, 0);
-                  }}
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
                     (customerType as 'particulier' | 'zakelijk') === 'particulier' 
                       ? 'font-bold'
@@ -935,15 +871,10 @@ export default function InleverpuntenPage() {
                   }}
                 >
                   Particulier
-                </a>
-                <a
-                  href="/?type=zakelijk#top"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    window.location.href = '/?type=zakelijk';
-                    window.scrollTo(0, 0);
-                  }}
+                </Link>
+                <Link
+                  href="/?type=zakelijk"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
                     (customerType as 'particulier' | 'zakelijk') === 'zakelijk' 
                       ? 'font-bold text-white hover:bg-gray-700'
@@ -954,7 +885,7 @@ export default function InleverpuntenPage() {
                   }}
                 >
                   Zakelijk
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -1127,7 +1058,7 @@ export default function InleverpuntenPage() {
               <div className="lg:col-span-1">
                 <div className="relative">
                   <div className="space-y-4 max-h-96 lg:max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                  {sortedLocations.map((location, index) => (
+                  {sortedLocations.map((location) => (
                     <div
                       key={location.id}
                       className={`rounded-xl p-4 transition-all duration-300 hover:shadow-lg cursor-pointer ${
@@ -1169,7 +1100,7 @@ export default function InleverpuntenPage() {
                                     ? 'bg-gray-500 text-gray-200'
                                     : 'bg-gray-200 text-gray-700'
                               }`}>
-                                {location.distance ? location.distance.toFixed(1) : calculateDistance(userLocation.lat, userLocation.lng, location.coordinates.lat, location.coordinates.lng).toFixed(1)} km
+                                {calculateDistance(userLocation.lat, userLocation.lng, location.coordinates.lat, location.coordinates.lng).toFixed(1)} km
                               </span>
                             )}
             </div>
@@ -1355,8 +1286,8 @@ export default function InleverpuntenPage() {
               <h4 className="font-semibold mb-4 text-white">Bedrijf</h4>
               <ul className="space-y-2 text-sm text-white opacity-80">
                 <li><a href="#contact" className="hover:opacity-100 transition-opacity">Contact</a></li>
-                <li><a href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden</a></li>
-                <li><a href="/voorwaarden" className="hover:opacity-100 transition-opacity">Privacy</a></li>
+                <li><Link href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden</Link></li>
+                <li><Link href="/voorwaarden" className="hover:opacity-100 transition-opacity">Privacy</Link></li>
               </ul>
             </div>
 
@@ -1373,7 +1304,7 @@ export default function InleverpuntenPage() {
           </div>
 
           <div className="border-t mt-12 pt-8 text-center text-sm text-white opacity-80" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}>
-            <p>© 2025 Circular Shipping Company B.V. Alle rechten voorbehouden | <a href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden & Privacybeleid</a> | Aangedreven door <a href="https://www.nieuw-net.nl" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">NieuwNet</a></p>
+            <p>© 2025 Circular Shipping Company B.V. Alle rechten voorbehouden | <Link href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden & Privacybeleid</Link> | Aangedreven door <a href="https://www.nieuw-net.nl" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">NieuwNet</a></p>
           </div>
         </div>
       </footer>
@@ -1390,5 +1321,13 @@ export default function InleverpuntenPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function InleverpuntenPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <InleverpuntenPageContent />
+    </Suspense>
   );
 }

@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function VoorwaardenPage() {
   // State for customer type selection
-  const [customerType, setCustomerType] = useState<'particulier' | 'zakelijk'>('particulier');
+  const [customerType] = useState<'particulier' | 'zakelijk'>('particulier');
 
   // State for mobile menu
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,7 +25,7 @@ export default function VoorwaardenPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <a href="/" className="hover:opacity-80 transition-opacity">
+              <Link href="/" className="hover:opacity-80 transition-opacity">
                 <Image
                   src="/LogoMain.png"
                   alt="Circular Shipping Company"
@@ -36,28 +36,19 @@ export default function VoorwaardenPage() {
                   }`}
                   priority
                 />
-              </a>
+              </Link>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="#verhaal"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById('verhaal');
-                  if (element) {
-                    const headerHeight = 80;
-                    const elementPosition = element.offsetTop - headerHeight;
-                    window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                  }
-                }}
+              <Link
+                href="/verhaal"
                 className={`hover:opacity-70 transition-opacity ${
                   customerType === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
               >
                 Ons verhaal
-              </a>
+              </Link>
               <a
                 href="#contact"
                 onClick={(e) => {
@@ -114,7 +105,7 @@ export default function VoorwaardenPage() {
               <div className={`w-px h-6 ${(customerType === 'zakelijk' ? 'bg-gray-600' : 'bg-gray-300')}`}></div>
 
               {/* Desktop Customer Type Links */}
-              <a
+              <Link
                 href="/"
                 className={`hover:opacity-70 transition-opacity ${
                   customerType === 'particulier'
@@ -128,8 +119,8 @@ export default function VoorwaardenPage() {
                 }}
               >
                 Particulier
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/?type=zakelijk"
                 className={`hover:opacity-70 transition-opacity ${
                   customerType === 'zakelijk'
@@ -141,7 +132,7 @@ export default function VoorwaardenPage() {
                 }}
               >
                 Zakelijk
-              </a>
+              </Link>
             </div>
 
 
@@ -175,24 +166,15 @@ export default function VoorwaardenPage() {
             }`}>
               <div className="flex flex-col space-y-4 pt-4">
                 {/* Mobile Navigation Links */}
-                <a
-                  href="#verhaal"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    const element = document.getElementById('verhaal');
-                    if (element) {
-                      const headerHeight = 80;
-                      const elementPosition = element.offsetTop - headerHeight;
-                      window.scrollTo({ top: elementPosition, behavior: 'smooth' });
-                    }
-                  }}
+                <Link
+                  href="/verhaal"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
                     customerType === 'zakelijk' ? 'text-white hover:bg-gray-700' : 'text-black hover:bg-gray-100'
                   }`}
                 >
                   Ons verhaal
-                </a>
+                </Link>
                 <a
                   href="#contact"
                   onClick={(e) => {
@@ -254,7 +236,7 @@ export default function VoorwaardenPage() {
                 }`}></div>
 
                 {/* Customer Type Links - both always visible */}
-                <a
+                <Link
                   href="/"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
@@ -269,8 +251,8 @@ export default function VoorwaardenPage() {
                   }}
                 >
                   Particulier
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/?type=zakelijk"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`block py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 text-left ${
@@ -283,7 +265,7 @@ export default function VoorwaardenPage() {
                   }}
                 >
                   Zakelijk
-                </a>
+                </Link>
               </div>
             </div>
           </div>

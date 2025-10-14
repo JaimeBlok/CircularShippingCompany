@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function Home() {
+function HomeContent() {
   const heroRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
@@ -338,7 +338,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <a href="/" className="hover:opacity-80 transition-opacity">
+              <Link href="/" className="hover:opacity-80 transition-opacity">
                 <Image
                   src="/LogoMain.png"
                   alt="Circular Shipping Company"
@@ -349,19 +349,19 @@ export default function Home() {
                   }`}
                   priority
                 />
-              </a>
+              </Link>
             </div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <a 
+              <Link 
                 href="/verhaal"
                 className={`hover:opacity-70 transition-opacity ${
                 (customerType as 'particulier' | 'zakelijk') === 'zakelijk' ? 'text-white' : 'text-black'
                 }`}
               >
                 Ons verhaal
-              </a>
+              </Link>
               <a 
                 href="#contact" 
                 onClick={(e) => {
@@ -479,7 +479,7 @@ export default function Home() {
             }`}>
               <div className="flex flex-col space-y-4 pt-4">
                 {/* Mobile Navigation Links */}
-                <a 
+                <Link 
                   href="/verhaal"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`py-3 px-4 rounded-lg hover:opacity-70 transition-all duration-200 ${
@@ -487,7 +487,7 @@ export default function Home() {
                   }`}
                 >
                   Ons verhaal
-                </a>
+                </Link>
                 <a 
                   href="#contact" 
                   onClick={(e) => {
@@ -752,12 +752,12 @@ export default function Home() {
                   Wij zijn drie studenten van de TU Delft met één missie: een wereld zonder single-use verpakkingen. 
                   Onze herbruikbare verpakkingen zijn gemaakt van gerecycled plastic en worden binnen een closed-loop gerecycled.
                 </p>
-                <a
+                <Link
                   href="/verhaal"
                   className="inline-block bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
                   Ons verhaal
-                </a>
+                </Link>
                 </div>
                 
               {/* Right side - Empty for now */}
@@ -1019,7 +1019,7 @@ export default function Home() {
                 </div>
                 <div className="bg-gray-700 rounded-2xl p-6 shadow-lg">
                   <blockquote className="text-white text-lg leading-relaxed mb-4">
-                    "Herbruikbare verpakkingen hebben onze verzendkosten met 30% verlaagd en dragen bij aan onze duurzaamheidsdoelstellingen."
+                    &ldquo;Herbruikbare verpakkingen hebben onze verzendkosten met 30% verlaagd en dragen bij aan onze duurzaamheidsdoelstellingen.&rdquo;
                   </blockquote>
                   <div className="text-gray-300 text-sm">
                     <strong>Sarah van der Berg</strong><br />
@@ -1041,7 +1041,7 @@ export default function Home() {
                 </div>
                 <div className="bg-gray-700 rounded-2xl p-6 shadow-lg">
                   <blockquote className="text-white text-lg leading-relaxed mb-4">
-                    "De klanttevredenheid is gestegen omdat ze zich bewust zijn van onze milieuvriendelijke aanpak. Een win-win situatie."
+                    &ldquo;De klanttevredenheid is gestegen omdat ze zich bewust zijn van onze milieuvriendelijke aanpak. Een win-win situatie.&rdquo;
                   </blockquote>
                   <div className="text-gray-300 text-sm">
                     <strong>Mark Janssen</strong><br />
@@ -1063,7 +1063,7 @@ export default function Home() {
                 </div>
                 <div className="bg-gray-700 rounded-2xl p-6 shadow-lg">
                   <blockquote className="text-white text-lg leading-relaxed mb-4">
-                    "Efficiëntie en duurzaamheid gaan hand in hand. Onze klanten waarderen de professionele uitstraling van de herbruikbare dozen."
+                    &ldquo;Efficiëntie en duurzaamheid gaan hand in hand. Onze klanten waarderen de professionele uitstraling van de herbruikbare dozen.&rdquo;
                   </blockquote>
                   <div className="text-gray-300 text-sm">
                     <strong>Lisa de Vries</strong><br />
@@ -1754,8 +1754,8 @@ export default function Home() {
               <h4 className="font-semibold mb-4 text-white">Bedrijf</h4>
               <ul className="space-y-2 text-sm text-white opacity-80">
                 <li><a href="#contact" className="hover:opacity-100 transition-opacity">Contact</a></li>
-                <li><a href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden</a></li>
-                <li><a href="/voorwaarden" className="hover:opacity-100 transition-opacity">Privacy</a></li>
+                <li><Link href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden</Link></li>
+                <li><Link href="/voorwaarden" className="hover:opacity-100 transition-opacity">Privacy</Link></li>
               </ul>
             </div>
 
@@ -1772,7 +1772,7 @@ export default function Home() {
           </div>
           
           <div className="border-t mt-12 pt-8 text-center text-sm text-white opacity-80" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }}>
-            <p>© 2025 Circular Shipping Company B.V. Alle rechten voorbehouden | <a href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden & Privacybeleid</a> | Aangedreven door <a href="https://www.nieuw-net.nl" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">NieuwNet</a></p>
+            <p>© 2025 Circular Shipping Company B.V. Alle rechten voorbehouden | <Link href="/voorwaarden" className="hover:opacity-100 transition-opacity">Voorwaarden & Privacybeleid</Link> | Aangedreven door <a href="https://www.nieuw-net.nl" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">NieuwNet</a></p>
           </div>
         </div>
       </footer>
@@ -1789,5 +1789,13 @@ export default function Home() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
